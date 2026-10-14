@@ -28,5 +28,5 @@
 
 ## 已知问题
 - 剪贴板共享与拖放均为 disabled, 未安装增强功能 (SSH 方式不受影响)
-- PX4 为 main 分支开发版, 随意 git pull 会破坏可
+- PX4 为 main 分支开发版, 随意 git pull 会破坏可复现性
 - flight_results.csv 中 lat_err/lon_err 单位为度, alt_err 单位为米, 且 alt_err 约 10 m 可疑, 待核对生成脚本

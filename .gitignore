@@ -1,0 +1,7 @@
+# 编辑器临时文件
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.pyc
