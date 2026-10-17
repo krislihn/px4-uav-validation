@@ -24,6 +24,7 @@ async def run():
     async for pos in drone.telemetry.position():
         home_lat = pos.latitude_deg
         home_lon = pos.longitude_deg
+        home_abs = pos.absolute_altitude_m
         print('Home:', home_lat, home_lon)
         break
 
@@ -44,7 +45,7 @@ async def run():
     results = []
     for i, (lat, lon, alt) in enumerate(waypoints):
         print(f'Going to waypoint {i+1}')
-        await drone.action.goto_location(lat, lon, alt, 0)
+        await drone.action.goto_location(lat, lon, home_abs + alt, 0)
         await asyncio.sleep(10)
         async for pos in drone.telemetry.position():
             error_lat = abs(pos.latitude_deg - lat)
@@ -63,7 +64,10 @@ async def run():
     await asyncio.sleep(10)
 
     print('-- Disarming --')
-    await drone.action.disarm()
+    try:
+        await drone.action.disarm()
+    except Exception as e:
+        print("disarm failed:", e)
 
     with open('flight_results.csv', 'w', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=['wp', 'lat_err', 'lon_err', 'alt_err'])
