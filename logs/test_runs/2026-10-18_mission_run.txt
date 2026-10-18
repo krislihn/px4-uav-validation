@@ -1,0 +1,36 @@
+Connecting to drone...
+Drone connected!
+Waiting for GPS...
+GPS ready
+Home: 47.3979712 8.5461637
+-- Arming --
+Exception ignored in: <function WrappedIterator.__del__ at 0x7f0910993400>
+Traceback (most recent call last):
+  File "/home/liuqiang/.local/lib/python3.10/site-packages/aiogrpc/utils.py", line 168, in __del__
+    self._stream_executor.shutdown()
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 235, in shutdown
+    t.join()
+  File "/usr/lib/python3.10/threading.py", line 1093, in join
+    raise RuntimeError("cannot join current thread")
+RuntimeError: cannot join current thread
+-- Taking off --
+Going to waypoint 1
+WP1 errors: lat=0.000000 lon=0.000000 alt=0.06
+Going to waypoint 2
+WP2 errors: lat=0.000000 lon=0.000000 alt=0.00
+Going to waypoint 3
+WP3 errors: lat=0.000000 lon=0.000000 alt=0.01
+-- Returning to launch --
+Exception ignored in: <function WrappedIterator.__del__ at 0x7f0910993400>
+Traceback (most recent call last):
+  File "/home/liuqiang/.local/lib/python3.10/site-packages/aiogrpc/utils.py", line 168, in __del__
+    self._stream_executor.shutdown()
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 235, in shutdown
+    t.join()
+  File "/usr/lib/python3.10/threading.py", line 1093, in join
+    raise RuntimeError("cannot join current thread")
+RuntimeError: cannot join current thread
+-- Landing --
+-- Disarming --
+Results saved to flight_results.csv
+Mission complete!

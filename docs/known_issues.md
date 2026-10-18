@@ -1,11 +1,19 @@
 # 已知问题 Known Issues
 
-更新时间: 2026-10-14
+更新时间: 2026-10-18
 状态约定: [未验证] = 有证据怀疑但尚未通过实验确认; [已确认] = 有证据支持
 
 ## 1. 脚本与数据(优先级最高)
 
-### 1.1 alt_err 的口径可疑 —— [未验证]
+### 1.1 alt_err 的口径 —— [已确认: 第三参数是绝对高度]
+- **结论(2026-10-18):** `goto_location()` 第三个参数是绝对高度(AMSL)。脚本传入相对 10 m,
+  而 SITL home 海拔约 488.27 m,等于要求机体降到地下,因此落地后 relative_altitude_m 约为 0,
+  alt_err 约为 10。证据: `logs/test_runs/2026-10-16_alt_probe.csv`
+  (rel 0.00 -> 2.32 -> 0.00; abs 488.27 -> 490.58 -> 488.19)。
+- **修复:** `goto_location(lat, lon, home_abs + alt, 0)`,其中
+  `home_abs = position().absolute_altitude_m`(提交 `b268643`)。
+- **修复后验证:** 三次全流程运行,alt_err = 0.08/0.01/0.00、0.02/0.11/0.10、0.06/0.00/0.01 m。
+  运行输出见 `logs/test_runs/2026-10-18_mission_run.txt`,结果见 `flight_results.csv`。
 
 - 现象: `logs/2026-10-13_flight_results.csv` 三个航点的 alt_err 分别为 9.99 / 10.05 / 9.96 m, 几乎等于航点设定高度 10.0 m。
 - 推断: 脚本里 alt_err = |relative_altitude_m - 10.0|, 反推三个时刻的 relative_altitude_m 约为
