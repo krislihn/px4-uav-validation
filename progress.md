@@ -6,11 +6,11 @@
 
 ## 1. 当前状态
 
-- 当前阶段:阶段 0 完成;阶段 2(自主飞行)完成首个可复现闭环;阶段 3 准备中
-- 当前任务编号:T-005 已完成(高度口径定位与修复)
-- 上次验收结果:通过(3 次航点任务全流程,高度误差 0.00–0.11 m)
+- 当前阶段:阶段 0 完成(含架构图);阶段 2 完成首个可复现闭环;阶段 1 进行中
+- 当前任务编号:T-006 已完成(架构图与数据流说明)
+- 上次验收结果:通过(口头复述两题:QGC 不参与控制;MAVSDK 走 MAVLink 14540)
 - 今天日期:2026-10-18
-- 下次唯一目标:修 known_issues 1.2,把固定 sleep 改成"轮询状态 + 超时"
+- 下次唯一目标:阶段 1 遥测采集——确定 CSV 字段,写 telemetry_logger.py 并产出真实数据
 
 ## 2. 环境快照(改过任何版本就更新)
 
@@ -39,6 +39,7 @@
 | 高度口径问题定位 | logs/test_runs/2026-10-16_alt_probe.csv | 连续曲线证明 home 海拔 488.27 m,命令"10"被当成海拔 | 通过 |
 | 航点任务高度修复 | 提交 b268643; flight_results.csv | goto_location 改为 home_abs + 相对高度 | 通过 |
 | 航点任务三次全流程复现 | flight_results.csv; 2026-10-18 运行输出 | 3 次自动起飞-3 航点-返航-降落;高度误差 0.00–0.11 m | 通过 |
+| 架构图与数据流 | docs/architecture.png, docs/architecture.md | 能讲清四层分工与端口 | 通过 |
 | QGC 遥测持续刷新 | 2026-10-13 QGC tlog(27753 帧, sysid=1 autopilot=PX4) | 数据持续更新 | 通过(今日未复测) |
 
 ## 4. 已解决 / 未解决
@@ -61,8 +62,9 @@
 - 运行输出:logs/test_runs/2026-10-18_mission_run.txt(2026-10-18 完整终端输出)
 - 运行结果:flight_results.csv(最近一次运行的三航点误差)
 - 归档代码:scripts/connection_check.py、scripts/waypoint_mission.py、scripts/alt_probe.py
+- 架构:docs/architecture.png、docs/architecture.md(生成脚本 scripts/draw_architecture.py)
 - 参考方案:docs/reference/PX4_UAV_Autonomous_Flight_Automated_Testing_Final_Plan.pdf
-- Git 提交:05e80ee、39500bd、7d5046c、9120940、b268643、aa32776
+- Git 提交:05e80ee、39500bd、7d5046c、9120940、b268643、aa32776、ada0881、bdfe14f
 
 ## 6. 我能不能讲清楚(每阶段自查,不通过就停下重来)
 
