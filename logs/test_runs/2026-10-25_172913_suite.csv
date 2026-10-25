@@ -1,0 +1,8 @@
+case_id,name,expected,actual,verdict
+TC-01,连接检查,10 秒内 is_connected=True,connected,PASS
+TC-02,遥测连续,15 秒内 >=8 个样本且时间递增,samples=8 increasing=True,PASS
+TC-03,解锁,5 秒内 armed=True,armed=True,PASS
+TC-04,起飞到 2.5 m,20 秒内 rel_alt >= 2.0 m,rel_alt=2.00 m,PASS
+TC-05,悬停稳定,"alt 2.0-3.0 m, drift <= 0.5 m","alt 2.10-2.61 m, drift 0.08 m",PASS
+TC-06,航点到达,"h_err <= 1.0 m, alt_err <= 0.5 m","h_err=0.98 m, alt_err=0.09 m",PASS
+TC-07,降落,30 秒内 rel_alt <= 0.2 m,rel_alt=0.19 m,PASS

@@ -1,0 +1,8 @@
+case_id,name,precondition,steps,expected,actual,verdict,evidence
+TC-01,"连接检查","SITL 已启动","脚本连接 udp://:14540","10 秒内 is_connected=True","","",""
+TC-02,"遥测连续","已连接","订阅 position_velocity_ned 流","15 秒内 ≥8 个样本且时间递增","","",""
+TC-03,"解锁","定位就绪且未解锁","调用 arm()","5 秒内 armed=True","","",""
+TC-04,"起飞到 2.5 m","已解锁","set_takeoff_altitude(2.5) 后 takeoff()","20 秒内 rel_alt ≥ 2.0 m","","",""
+TC-05,"悬停稳定","已起飞","悬停观察 20 秒","rel_alt 在 2.0-3.0 m, 水平漂移 ≤ 0.5 m","","",""
+TC-06,"航点到达","悬停中","goto_location(home 北 11.1 m, 高度 home+2.5 m)","30 秒内水平误差 ≤ 1.0 m, 高度误差 ≤ 0.5 m","","",""
+TC-07,"降落","悬停中","调用 land()","30 秒内 rel_alt ≤ 0.2 m 且 in_air=False","","",""

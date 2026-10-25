@@ -10,7 +10,7 @@
 - 当前任务编号:T-006 已完成(架构图与数据流说明)
 - 上次验收结果:通过(口头复述两题:QGC 不参与控制;MAVSDK 走 MAVLink 14540)
 - 今天日期:2026-10-18
-- 下次唯一目标:阶段 3 测试套件:用例表 + run_test_suite.py + 自动 PASS/FAIL
+- 下次唯一目标:重复运行测试套件 3 次统计稳定性; 修 known_issues 1.8(等待稳定再判定)
 
 ## 2. 环境快照(改过任何版本就更新)
 
@@ -42,6 +42,7 @@
 | 架构图与数据流 | docs/architecture.png, docs/architecture.md | 能讲清四层分工与端口 | 通过 |
 | 首次真实飞行遥测 | logs/test_runs/2026-10-24_first_flight.csv | 59 条; rel_alt 最大 2.47 m(t=12.27); 模式 TAKEOFF/LAND/HOLD | 通过 |
 | 固定采样与时间戳命名 | logs/test_runs/2026-10-25_171220_telemetry.csv | 60 条; 间隔 min=max=1.000 s | 通过 |
+| 测试套件首跑 | logs/test_runs/2026-10-25_172913_suite.csv | 7 条用例全部 PASS; 悬停 2.10-2.61 m, 漂移 0.08 m | 通过 |
 | QGC 遥测持续刷新 | 2026-10-13 QGC tlog(27753 帧, sysid=1 autopilot=PX4) | 数据持续更新 | 通过(今日未复测) |
 
 ## 4. 已解决 / 未解决
@@ -67,6 +68,7 @@
 - 架构:docs/architecture.png、docs/architecture.md(生成脚本 scripts/draw_architecture.py)
 - 飞行遥测:logs/test_runs/2026-10-24_first_flight.csv(59 条, 60 秒)
 - 定频遥测:logs/test_runs/2026-10-25_171220_telemetry.csv(60 条, 1.000 s 间隔)
+- 测试套件:scripts/run_test_suite.py、docs/test_cases.csv、logs/test_runs/2026-10-25_172913_suite.csv
 - 参考方案:docs/reference/PX4_UAV_Autonomous_Flight_Automated_Testing_Final_Plan.pdf
 - Git 提交:05e80ee、39500bd、7d5046c、9120940、b268643、aa32776、ada0881、bdfe14f
 
