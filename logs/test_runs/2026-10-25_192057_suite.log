@@ -1,0 +1,5 @@
+9139.76  TC-01 PASS  connected
+9140.00  TC-02 PASS  samples=8 increasing=True
+9144.11  precheck: rel_alt=0.0 in_air=False armed=False
+9145.13  home abs alt = 488.26
+9146.11  TC-03 PASS  armed=True

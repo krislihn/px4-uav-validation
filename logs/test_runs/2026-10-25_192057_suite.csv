@@ -1,0 +1,4 @@
+case_id,name,expected,actual,verdict
+TC-01,连接检查,10 秒内 is_connected=True,connected,PASS
+TC-02,遥测连续,15 秒内 >=8 个样本且时间递增,samples=8 increasing=True,PASS
+TC-03,解锁,5 秒内 armed=True,armed=True,PASS
