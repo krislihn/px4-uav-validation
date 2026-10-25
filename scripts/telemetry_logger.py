@@ -1,10 +1,11 @@
 import asyncio
 import csv
 import time
+from datetime import datetime
 
 from mavsdk import System
 
-OUT = 'logs/test_runs/2026-10-21_ground_test.csv'
+OUT = f'logs/test_runs/{datetime.now():%Y-%m-%d_%H%M%S}_telemetry.csv'
 SECONDS = 60
 
 
@@ -57,7 +58,7 @@ async def main():
         writer.writerow(['t_s', 'rel_alt_m', 'abs_alt_m', 'north_m', 'east_m',
                          'vn', 've', 'vd', 'mode'])
         t0 = time.monotonic()
-        while time.monotonic() - t0 < SECONDS:
+        for i in range(SECONDS):
             pv = await one_pv(drone)
             rel = -pv.position.down_m
             writer.writerow([
@@ -72,8 +73,9 @@ async def main():
                 state['mode'],
             ])
             f.flush()
-            await asyncio.sleep(1)
-
+            delay = t0 + (i + 1) - time.monotonic()
+            if delay > 0:
+                await asyncio.sleep(delay)
     mode_task.cancel()
     print('saved', OUT, flush=True)
 
