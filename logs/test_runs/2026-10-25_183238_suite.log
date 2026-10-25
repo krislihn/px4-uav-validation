@@ -1,0 +1,9 @@
+6240.78  TC-01 PASS  connected
+6241.03  TC-02 PASS  samples=8 increasing=True
+6242.31  home abs alt = 490.73
+6243.30  TC-03 PASS  armed=True
+6243.33  TC-04 PASS  rel_alt=2.48 m
+6263.35  TC-05 FAIL  alt 2.51-5.02 m, drift 0.04 m
+6293.39  TC-06 FAIL  h_err=0.03 m, alt_err=2.51 m
+6300.73  TC-07 PASS  rel_alt=0.19 m
+6300.74  disarm: COMMAND_DENIED_NOT_LANDED: 'Command Denied Not Landed'; origin: disarm(); params: ()
