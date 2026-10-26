@@ -10,7 +10,7 @@
 - 当前任务编号:T-006 已完成(架构图与数据流说明)
 - 上次验收结果:通过(口头复述两题:QGC 不参与控制;MAVSDK 走 MAVLink 14540)
 - 今天日期:2026-10-18
-- 下次唯一目标:阶段 5 交付:README、技术报告、英文摘要
+- 下次唯一目标:验证 known_issues 1.13(到位半径); 录制演示视频
 
 ## 2. 环境快照(改过任何版本就更新)
 
@@ -47,6 +47,7 @@
 | 干净环境复跑 | logs/test_runs/2026-10-25_183459_suite.csv | 7/7 PASS | 通过 |
 | 测试套件连续 3 轮 | logs/test_runs/2026-10-25_1926*_suite.csv 等 3 份 | 3×7/7 PASS; 悬停 2.38-2.47 m, 漂移 <=0.07 m; 航点 h_err <=0.93 m | 通过 |
 | 数据分析脚本与首版图表 | analysis/analyze_logs.py、summary.csv、figures/ | 汇总 4 份遥测; 高度/速度/漂移图; 套件 11 次汇总 | 通过 |
+| 阶段 5 交付 | README.md、docs/technical_report.md、docs/summary_en.md、docs/data_dictionary.md、analysis/PX4_项目数据与图表.pdf | 文档齐全, 可由 README 复现核心流程 | 通过 |
 | QGC 遥测持续刷新 | 2026-10-13 QGC tlog(27753 帧, sysid=1 autopilot=PX4) | 数据持续更新 | 通过(今日未复测) |
 
 ## 4. 已解决 / 未解决
@@ -76,6 +77,7 @@
 - 测试套件复跑:logs/test_runs/2026-10-25_183238_suite.csv(5/7)、2026-10-25_183459_suite.csv(7/7)
 - 三轮复跑:logs/test_runs/2026-10-25_192618_suite.csv、192709、192800
 - 分析:analysis/analyze_logs.py、summary.csv、suite_summary.csv、figures/altitude_curve.png、figures/flight_kinematics.png
+- 交付文档:README.md、docs/technical_report.md、docs/summary_en.md、docs/data_dictionary.md
 - 参考方案:docs/reference/PX4_UAV_Autonomous_Flight_Automated_Testing_Final_Plan.pdf
 - Git 提交:05e80ee、39500bd、7d5046c、9120940、b268643、aa32776、ada0881、bdfe14f
 
