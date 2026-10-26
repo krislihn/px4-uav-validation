@@ -1,0 +1,5 @@
+file,samples,duration_s,dt_mean_s,dt_min_s,dt_max_s,alt_min_m,alt_max_m,alt_mean_m,alt_std_m,drift_max_m,vz_max_abs_mps,modes
+2026-10-21_telemetry.csv,20,19.59,1.031,1.01,1.04,0.009,0.049,0.03,0.012,0.05,0.009,HOLD:19;:1
+2026-10-24_first_flight.csv,59,59.21,1.021,1.0,1.04,-0.135,2.47,0.543,0.978,0.049,0.782,HOLD:49;LAND:8;TAKEOFF:2
+2026-10-25_170840_telemetry.csv,60,87.76,1.487,0.03,68.42,-0.049,0.049,0.015,0.029,0.053,0.012,HOLD:60
+2026-10-25_171220_telemetry.csv,60,59.0,1.0,1.0,1.0,-0.034,0.044,-0.001,0.016,0.067,0.013,HOLD:60
