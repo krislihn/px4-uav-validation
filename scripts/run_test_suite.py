@@ -223,10 +223,20 @@ async def main(drone):
                 stable = 0
     add('TC-07', '降落', '连续 3 次 rel_alt <= 0.2 m', actual, stable >= STABLE_N)
 
-    try:
-        await drone.action.disarm()
-    except Exception as e:
-        log(f'disarm: {e}')
+    disarmed = False
+    for _ in range(10):
+        if not await first(drone.telemetry.armed(), 1):
+            disarmed = True
+            break
+        await asyncio.sleep(1)
+    if disarmed:
+        log('disarmed by landing')
+    else:
+        try:
+            await drone.action.disarm()
+            log('disarmed by command')
+        except Exception as e:
+            log(f'disarm: {e}')
 
 
 async def run():
