@@ -1,5 +1,7 @@
 # PX4 无人机自主飞行与自动化测试平台
 
+*Simulation-based autonomous flight and automated testing platform for PX4 UAVs.*
+
 基于 **PX4 SITL + Gazebo** 的无人机仿真自主飞行与自动化测试平台：用 MAVSDK-Python 执行自主飞行、记录遥测定频数据，并用一套可重复执行的测试用例验证飞行结果。
 
 ## 结果速览（真实数据）
@@ -16,6 +18,11 @@
 | 遥测样本 | 199 条 / 4 份文件 |
 
 数据与图表摘要：[`analysis/PX4_项目数据与图表.pdf`](analysis/PX4_项目数据与图表.pdf)
+
+## 为什么做这个
+
+我最初只是想跑通 PX4 SITL，但在调试 QGroundControl 连接和航点高度时踩了几次坑，
+于是把过程沉淀成了一套可重复执行的测试流程：每次改动后跑一遍，用日志和数字判断有没有变好。
 
 ## 系统架构
 
@@ -68,6 +75,16 @@ python3 analysis/make_report.py
 注意：同一时间只能运行一个 MAVSDK 程序（都会占用 UDP 14540）。仿真请在前台运行，
 不要用 `nohup ... > /tmp/xxx.log` 长时间后台运行。
 
+## 踩过的坑（按时间）
+
+- **2026-10-13**：QGC 显示 `PX4 SITL (Connected)` 却收不到数据。排查发现 PX4 的 GCS 端口是 18570，
+  而 VirtualBox 把宿主 14550 转发进了虚拟机 14550，数据在 NAT 里打转；改成让 PX4 主动推送到宿主机 14550 后恢复。
+- **2026-10-16**：三个航点的高度误差都正好是 10 m。用原地起降的探针连续记录高度曲线，
+  才确认 `goto_location()` 第三参数是绝对高度（AMSL），而 SITL home 海拔约 488 m。
+- **2026-10-24**：虚拟机磁盘写满。`/tmp/px4.log` 在 55 分钟内涨到 9 GB（仿真在后台运行，
+  `pxh>` 提示符持续写入），清理后恢复 12 GB。
+- **2026-10-25**：测试套件第一次跑出 6/7——悬停窗口包含了起飞过渡过程；加 5 秒稳定时间后连续三轮 7/7。
+
 ## 测试与数据
 
 - 用例定义：[`docs/test_cases.csv`](docs/test_cases.csv)
@@ -75,6 +92,11 @@ python3 analysis/make_report.py
 - 每次运行的判定结果与日志：`logs/test_runs/<时间>_suite.csv` / `.log`
 - 遥测字段说明：[`docs/data_dictionary.md`](docs/data_dictionary.md)
 - 已知问题：[`docs/known_issues.md`](docs/known_issues.md)
+
+## 项目现状
+
+- 已完成：环境、遥测采集、自主飞行、自动化测试、数据分析、文档
+- 待完成：演示视频；航点到位半径（约 0.93 m）的验证
 
 ## 已知限制
 
