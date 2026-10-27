@@ -5,6 +5,18 @@ from datetime import datetime
 
 from mavsdk import System
 
+import sys
+
+
+def _quiet_unraisable(unraisable):
+    text = f'{unraisable.object!r} {unraisable.exc_value!r}'
+    if 'WrappedIterator' in text or 'cannot join current thread' in text:
+        return
+    sys.__unraisablehook__(unraisable)
+
+
+sys.unraisablehook = _quiet_unraisable
+
 OUT = f'logs/test_runs/{datetime.now():%Y-%m-%d_%H%M%S}_telemetry.csv'
 SECONDS = 60
 
