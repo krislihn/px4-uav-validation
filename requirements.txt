@@ -1,0 +1,8 @@
+# 运行环境：Ubuntu 22.04 / Python 3.10
+# 供 scripts/ 与 analysis/ 使用
+mavsdk==1.4.8
+pandas==2.3.3
+numpy==2.2.6
+matplotlib==3.10.9
+reportlab==5.1.0
+fonttools>=4.65.0
