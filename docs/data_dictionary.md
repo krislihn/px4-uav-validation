@@ -1,6 +1,7 @@
 # 遥测数据字典
 
-来源：`scripts/telemetry_logger.py`（MAVSDK `position_velocity_ned()` 与 `flight_mode()`）。
+来源：`scripts/telemetry_logger.py`（MAVSDK `position_velocity_ned()`、
+`attitude_euler()`、`armed()` 与 `flight_mode()`）。
 
 | 字段 | 含义 | 单位 | 说明 |
 | --- | --- | --- | --- |
@@ -12,6 +13,12 @@
 | `vn` | 北向速度 | m/s | NED 北向速度 |
 | `ve` | 东向速度 | m/s | NED 东向速度 |
 | `vd` | 垂向速度 | m/s | NED 向下为正：负值表示上升 |
+| `roll_deg` | 横滚角 | deg | 来自 `attitude_euler()` |
+| `pitch_deg` | 俯仰角 | deg | 来自 `attitude_euler()` |
+| `yaw_deg` | 偏航角 | deg | 来自 `attitude_euler()` |
+| `armed` | 解锁状态 | - | `True` 表示飞控已解锁，`False` 表示未解锁 |
 | `mode` | 飞行模式 | - | 来自 MAVSDK `flight_mode()`，如 HOLD / TAKEOFF / LAND |
 
 注意：`north_m` / `east_m` 是**米**；而 `flight_results.csv` 中的 `lat_err` / `lon_err` 是**度**，两者不能混用。
+
+2026-10-28 起采集器输出上述 13 个字段；此前的遥测文件只有前 9 个字段。

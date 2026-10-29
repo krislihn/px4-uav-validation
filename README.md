@@ -60,7 +60,7 @@ QGroundControl 5.1.4、Python 3.10.12、mavsdk 1.4.8。
 cd ~/PX4-Autopilot
 make px4_sitl gz_x500
 
-# 终端 2：记录 60 秒遥测
+# 终端 2：记录 120 秒遥测（可用 TELEMETRY_SECONDS 调整）
 cd ~/px4-uav-validation
 python3 -u scripts/telemetry_logger.py
 
@@ -90,6 +90,7 @@ python3 analysis/make_report.py
 - 用例定义：[`docs/test_cases.csv`](docs/test_cases.csv)
 - 用例说明与技术报告：[`docs/technical_report.md`](docs/technical_report.md)
 - 每次运行的判定结果与日志：`logs/test_runs/<时间>_suite.csv` / `.log`
+- 姿态与解锁状态采集验证：`logs/test_runs/2026-10-28_223349_telemetry.csv`
 - 遥测字段说明：[`docs/data_dictionary.md`](docs/data_dictionary.md)
 - 已知问题：[`docs/known_issues.md`](docs/known_issues.md)
 

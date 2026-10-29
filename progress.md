@@ -6,11 +6,11 @@
 
 ## 1. 当前状态
 
-- 当前阶段:阶段 0 完成(含架构图);阶段 2 完成首个可复现闭环;阶段 1 进行中
-- 当前任务编号:T-006 已完成(架构图与数据流说明)
-- 上次验收结果:通过(口头复述两题:QGC 不参与控制;MAVSDK 走 MAVLink 14540)
-- 今天日期:2026-10-18
-- 下次唯一目标:验证 known_issues 1.13(到位半径); 录制演示视频
+- 当前阶段:阶段 0、1、2 已完成;阶段 3、4、5 进入补强与交付收尾
+- 当前任务编号:P1 已完成(姿态角与解锁状态遥测)
+- 上次验收结果:通过(真实飞行记录到 armed True/False 和姿态变化)
+- 今天日期:2026-10-29
+- 下次唯一目标:P2 数据分析,补 95 百分位与条件对比图
 
 ## 2. 环境快照(改过任何版本就更新)
 
@@ -42,6 +42,8 @@
 | 架构图与数据流 | docs/architecture.png, docs/architecture.md | 能讲清四层分工与端口 | 通过 |
 | 首次真实飞行遥测 | logs/test_runs/2026-10-24_first_flight.csv | 59 条; rel_alt 最大 2.47 m(t=12.27); 模式 TAKEOFF/LAND/HOLD | 通过 |
 | 固定采样与时间戳命名 | logs/test_runs/2026-10-25_171220_telemetry.csv | 60 条; 间隔 min=max=1.000 s | 通过 |
+| 姿态与解锁状态遥测 | logs/test_runs/2026-10-28_223349_telemetry.csv | 120 条、13 字段; 59 条 armed=True、61 条 armed=False; 最大相对高度 2.515 m; 姿态角有实际变化 | 通过 |
+| 升级后定频采样验证 | logs/test_runs/2026-10-29_145433_telemetry.csv | 5 条; 相邻时间间隔全部为 1.000 s; 新增字段齐全 | 通过 |
 | 测试套件首跑 | logs/test_runs/2026-10-25_172913_suite.csv | 7 条用例全部 PASS; 悬停 2.10-2.61 m, 漂移 0.08 m | 通过 |
 | 失败检测验证 | logs/test_runs/2026-10-25_183238_suite.csv | 状态污染导致 5/7, 套件正确判 FAIL | 通过 |
 | 干净环境复跑 | logs/test_runs/2026-10-25_183459_suite.csv | 7/7 PASS | 通过 |
@@ -73,6 +75,8 @@
 - 架构:docs/architecture.png、docs/architecture.md(生成脚本 scripts/draw_architecture.py)
 - 飞行遥测:logs/test_runs/2026-10-24_first_flight.csv(59 条, 60 秒)
 - 定频遥测:logs/test_runs/2026-10-25_171220_telemetry.csv(60 条, 1.000 s 间隔)
+- P1 姿态/解锁飞行遥测:logs/test_runs/2026-10-28_223349_telemetry.csv(120 条, 13 字段)
+- P1 定频采样短测:logs/test_runs/2026-10-29_145433_telemetry.csv(5 条, 间隔 1.000 s)
 - 测试套件:scripts/run_test_suite.py、docs/test_cases.csv、logs/test_runs/2026-10-25_172913_suite.csv
 - 测试套件复跑:logs/test_runs/2026-10-25_183238_suite.csv(5/7)、2026-10-25_183459_suite.csv(7/7)
 - 三轮复跑:logs/test_runs/2026-10-25_192618_suite.csv、192709、192800
@@ -89,9 +93,7 @@
 
 ## 7. 下次的唯一任务
 
-把 scripts/waypoint_mission.py 里所有"发指令 + 固定 sleep"的等待改成"轮询状态 + 超时":
-起飞后等到 relative_altitude_m 达到目标 ±0.5 m;每个航点等到水平/高度误差进入阈值;
-超时则打印明确原因并安全退出。改完重跑一次,确认仍通过且 disarm 不再报错。
+P2:在数据分析脚本中补 95 百分位统计,并生成不同实验条件的关键指标对比图。
 
 ## 8. 我要问 ChatGPT 的问题(攒着一起问)
 
