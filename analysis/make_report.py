@@ -1,6 +1,7 @@
 import os
 import re
 import subprocess
+from datetime import date
 
 import pandas as pd
 from reportlab.lib import colors
@@ -12,8 +13,8 @@ from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfbase.ttfonts import TTFont
 from fontTools.ttLib import TTCollection
 import tempfile
-from reportlab.platypus import (Image, Paragraph, SimpleDocTemplate, Spacer,
-                                Table, TableStyle)
+from reportlab.platypus import (Image, PageBreak, Paragraph, SimpleDocTemplate,
+                                Spacer, Table, TableStyle)
 
 _ttf = os.path.join(tempfile.gettempdir(), 'wqy_report.ttf')
 TTCollection('/usr/share/fonts/truetype/wqy/wqy-microhei.ttc').fonts[0].save(_ttf)
@@ -30,6 +31,8 @@ STY_SMALL = ParagraphStyle('s', fontName=FONT, fontSize=8.5, leading=12,
                            textColor=colors.HexColor('#666666'))
 
 summary = pd.read_csv('analysis/summary.csv')
+phase_summary = pd.read_csv('analysis/phase_summary.csv')
+condition_summary = pd.read_csv('analysis/suite_condition_summary.csv')
 suites = pd.read_csv('analysis/suite_summary.csv')
 last3 = suites.tail(3).reset_index(drop=True)
 n_cases = len(pd.read_csv(os.path.join('logs/test_runs', last3.iloc[-1]['file'])))
@@ -61,7 +64,10 @@ except Exception:
 
 story = []
 story.append(Paragraph('PX4 无人机自主飞行与自动化测试平台', STY_TITLE))
-story.append(Paragraph('数据与图表摘要 · 生成于 2026-10-26 · commit ' + commit, STY_SUB))
+story.append(Paragraph(
+    f'数据与图表摘要 · 生成于 {date.today():%Y-%m-%d} · commit {commit}',
+    STY_SUB,
+))
 story.append(Paragraph(
     '基于 PX4 SITL + Gazebo 的无人机仿真自主飞行与自动化测试平台。'
     '本页汇总真实运行产生的测试结果与遥测数据，所有指标均来自仓库中的 CSV 与运行日志。',
@@ -77,11 +83,14 @@ metrics = [
     ['悬停水平漂移', f'≤ {max(drifts):.2f} m', 'TC-05'],
     ['航点水平误差', f'{min(herrs):.2f}–{max(herrs):.2f} m', 'TC-06'],
     ['航点高度误差', f'≤ {max(aerrs):.2f} m', 'TC-06'],
-    ['单次飞行最大高度', f'{summary["alt_max_m"].max():.2f} m', '2026-10-24_first_flight.csv'],
-    ['定频采样间隔',
+    ['遥测最大相对高度', f'{summary["alt_max_m"].max():.2f} m', '有效遥测汇总'],
+    ['实际采样间隔范围',
      (f'{fixed["dt_min_s"].min():.2f}–{fixed["dt_max_s"].max():.2f} s' if len(fixed) else 'n/a'),
      'telemetry_logger.py'],
     ['遥测样本', f'{int(summary["samples"].sum())} 条 / {len(summary)} 份文件', 'analysis/summary.csv'],
+    ['空中悬停 P95 水平漂移',
+     f'{float(phase_summary.loc[phase_summary["phase"] == "airborne_hold", "drift_p95_m"].iloc[0]):.3f} m',
+     'analysis/phase_summary.csv'],
 ]
 table = Table(metrics, colWidths=[42 * mm, 78 * mm, 52 * mm])
 table.setStyle(TableStyle([
@@ -104,7 +113,60 @@ if os.path.exists(img2):
     story.append(Spacer(1, 4))
     story.append(Image(img2, width=170 * mm, height=136 * mm))
 
-story.append(Paragraph('三、测试运行汇总（最近 3 轮）', STY_H2))
+story.append(Paragraph('三、P95 与条件对比', STY_H2))
+story.append(Paragraph(
+    'P95 表示排序后的第 95 百分位，用来说明接近尾部的风险水平，'
+    '同时避免单个极端样本完全主导结论。',
+    STY_BODY,
+))
+phase_rows = [['飞行阶段', '文件数', '样本数', '高度 P95 (m)',
+               '漂移 P95 (m)', '|垂直速度| P95 (m/s)']]
+for _, r in phase_summary.iterrows():
+    phase_rows.append([
+        r['phase'], int(r['files']), int(r['samples']),
+        f'{r["alt_p95_m"]:.3f}', f'{r["drift_p95_m"]:.3f}',
+        f'{r["vz_abs_p95_mps"]:.3f}',
+    ])
+phase_table = Table(phase_rows, colWidths=[38 * mm, 20 * mm, 22 * mm,
+                                          30 * mm, 30 * mm, 32 * mm])
+phase_table.setStyle(TableStyle([
+    ('FONTNAME', (0, 0), (-1, -1), FONT),
+    ('FONTSIZE', (0, 0), (-1, -1), 8.5),
+    ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#DCE6F1')),
+    ('GRID', (0, 0), (-1, -1), 0.4, colors.HexColor('#999999')),
+    ('TOPPADDING', (0, 0), (-1, -1), 3),
+    ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+]))
+story.append(phase_table)
+story.append(Spacer(1, 6))
+phase_img = 'analysis/figures/phase_comparison.png'
+if os.path.exists(phase_img):
+    story.append(Image(phase_img, width=170 * mm, height=63 * mm))
+
+story.append(PageBreak())
+condition_rows = [['测试条件', '运行数', '判定数', '通过', '通过率']]
+for _, r in condition_summary.iterrows():
+    condition_rows.append([
+        r['condition'], int(r['runs']), int(r['decisions']),
+        int(r['passed']), f'{r["pass_rate_pct"]:.1f}%',
+    ])
+condition_table = Table(condition_rows, colWidths=[72 * mm, 25 * mm,
+                                                  25 * mm, 22 * mm, 28 * mm])
+condition_table.setStyle(TableStyle([
+    ('FONTNAME', (0, 0), (-1, -1), FONT),
+    ('FONTSIZE', (0, 0), (-1, -1), 8.5),
+    ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#E2EFDA')),
+    ('GRID', (0, 0), (-1, -1), 0.4, colors.HexColor('#999999')),
+    ('TOPPADDING', (0, 0), (-1, -1), 3),
+    ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+]))
+story.append(condition_table)
+story.append(Spacer(1, 6))
+condition_img = 'analysis/figures/condition_comparison.png'
+if os.path.exists(condition_img):
+    story.append(Image(condition_img, width=140 * mm, height=84 * mm))
+
+story.append(Paragraph('四、测试运行汇总（最近 3 轮）', STY_H2))
 rows = [['运行文件', '通过/总数', '失败用例']]
 for _, r in last3.iterrows():
     rows.append([r['file'], f'{int(r["passed"])}/{int(r["total"])}',
@@ -120,15 +182,17 @@ run_table.setStyle(TableStyle([
 ]))
 story.append(run_table)
 
-story.append(Paragraph('四、数据文件说明', STY_H2))
+story.append(Paragraph('五、数据文件说明', STY_H2))
 story.append(Paragraph(
-    'logs/test_runs/*_telemetry.csv：定频遥测（时间、相对/绝对高度、北东位置、三轴速度、飞行模式）<br/>'
+    'logs/test_runs/*_telemetry.csv：定频遥测（时间、位置、速度、姿态、解锁状态、飞行模式）<br/>'
     'logs/test_runs/*_first_flight.csv：首次真实飞行记录（59 条）<br/>'
     'logs/test_runs/*_suite.csv / *.log：测试套件判定结果与运行日志<br/>'
-    'analysis/summary.csv：每份遥测的统计量与数据质量检查<br/>'
-    'analysis/suite_summary.csv：全部套件运行的历史汇总', STY_BODY))
+    'analysis/summary.csv：每份遥测的最大值、P95 与数据质量检查<br/>'
+    'analysis/phase_summary.csv：按飞行阶段汇总的 P95 指标<br/>'
+    'analysis/suite_summary.csv：全部套件运行的历史汇总<br/>'
+    'analysis/suite_condition_summary.csv：按失败特征分组的通过率', STY_BODY))
 
-story.append(Paragraph('五、局限与未决问题', STY_H2))
+story.append(Paragraph('六、局限与未决问题', STY_H2))
 story.append(Paragraph(
     '1) 航点水平误差稳定在 0.92–0.93 m，疑为飞控「到位接受半径」，尚未验证（known_issues 1.13）。<br/>'
     '2) 2026-10-25 一份旧数据存在 68 秒采样空档，不可用于统计（1.14）。<br/>'

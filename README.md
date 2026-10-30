@@ -13,9 +13,11 @@
 | 悬停水平漂移 | ≤ 0.07 m |
 | 航点水平误差 | 0.92–0.93 m |
 | 航点高度误差 | ≤ 0.08 m |
-| 单次飞行最大高度 | 2.47 m |
+| 自动测试单次最大高度 | 2.47 m |
 | 定频采样间隔 | 1.000 s（min = max） |
-| 遥测样本 | 199 条 / 4 份文件 |
+| 遥测样本 | 264 条 / 5 份有效文件（另排除 1 份 68 s 断档） |
+| 航段 P95 水平漂移 | 地面悬停 0.053 m；空中悬停 0.067 m |
+| 条件对比通过率 | 正常 100%；悬停窗口异常 85.7%；状态污染 71.4% |
 
 数据与图表摘要：[`analysis/PX4_项目数据与图表.pdf`](analysis/PX4_项目数据与图表.pdf)
 
@@ -92,6 +94,9 @@ python3 analysis/make_report.py
 - 每次运行的判定结果与日志：`logs/test_runs/<时间>_suite.csv` / `.log`
 - 姿态与解锁状态采集验证：`logs/test_runs/2026-10-28_223349_telemetry.csv`
 - 遥测字段说明：[`docs/data_dictionary.md`](docs/data_dictionary.md)
+- 数据汇总：[`analysis/summary.csv`](analysis/summary.csv) / [`analysis/phase_summary.csv`](analysis/phase_summary.csv)
+- 测试条件对比：[`analysis/suite_condition_summary.csv`](analysis/suite_condition_summary.csv)
+- 分析图：[`phase_comparison.png`](analysis/figures/phase_comparison.png) / [`condition_comparison.png`](analysis/figures/condition_comparison.png)
 - 已知问题：[`docs/known_issues.md`](docs/known_issues.md)
 
 ## 项目现状

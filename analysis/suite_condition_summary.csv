@@ -1,0 +1,4 @@
+condition,runs,decisions,passed,pass_rate_pct
+clean_pass,6,42,42,100.0
+hover_window_failure,3,21,18,85.7
+state_contamination,1,7,5,71.4

@@ -6,11 +6,11 @@
 
 ## 1. 当前状态
 
-- 当前阶段:阶段 0、1、2 已完成;阶段 3、4、5 进入补强与交付收尾
-- 当前任务编号:P1 已完成(姿态角与解锁状态遥测)
-- 上次验收结果:通过(真实飞行记录到 armed True/False 和姿态变化)
-- 今天日期:2026-10-29
-- 下次唯一目标:P2 数据分析,补 95 百分位与条件对比图
+- 当前阶段:阶段 0、1、2 已完成;阶段 4 分析已补强;阶段 3、5 进入收尾
+- 当前任务编号:P2 已完成(P95 与条件对比)
+- 上次验收结果:通过(分析脚本生成汇总表与两张新图)
+- 今天日期:2026-10-30
+- 下次唯一目标:P3 测试增强(日志完整性用例与 ERROR 级判定)
 
 ## 2. 环境快照(改过任何版本就更新)
 
@@ -48,7 +48,9 @@
 | 失败检测验证 | logs/test_runs/2026-10-25_183238_suite.csv | 状态污染导致 5/7, 套件正确判 FAIL | 通过 |
 | 干净环境复跑 | logs/test_runs/2026-10-25_183459_suite.csv | 7/7 PASS | 通过 |
 | 测试套件连续 3 轮 | logs/test_runs/2026-10-25_1926*_suite.csv 等 3 份 | 3×7/7 PASS; 悬停 2.38-2.47 m, 漂移 <=0.07 m; 航点 h_err <=0.93 m | 通过 |
-| 数据分析脚本与首版图表 | analysis/analyze_logs.py、summary.csv、figures/ | 汇总 4 份遥测; 高度/速度/漂移图; 套件 11 次汇总 | 通过 |
+| 数据分析脚本与首版图表 | analysis/analyze_logs.py、summary.csv、figures/ | 有效遥测 5 份、264 条; 高度/速度/漂移图 | 通过 |
+| P95 与飞行阶段对比 | analysis/summary.csv、phase_summary.csv、figures/phase_comparison.png | 每份数据含高度/漂移/速度 P95; 按地面悬停、空中悬停、起飞、降落分组 | 通过 |
+| 测试条件对比 | analysis/suite_summary.csv、suite_condition_summary.csv、figures/condition_comparison.png | 正常 42/42; 悬停窗口异常 18/21; 状态污染 5/7; 不完整运行不计入通过率图 | 通过 |
 | 阶段 5 交付 | README.md、docs/technical_report.md、docs/summary_en.md、docs/data_dictionary.md、analysis/PX4_项目数据与图表.pdf | 文档齐全, 可由 README 复现核心流程 | 通过 |
 | QGC 遥测持续刷新 | 2026-10-13 QGC tlog(27753 帧, sysid=1 autopilot=PX4) | 数据持续更新 | 通过(今日未复测) |
 
@@ -77,6 +79,9 @@
 - 定频遥测:logs/test_runs/2026-10-25_171220_telemetry.csv(60 条, 1.000 s 间隔)
 - P1 姿态/解锁飞行遥测:logs/test_runs/2026-10-28_223349_telemetry.csv(120 条, 13 字段)
 - P1 定频采样短测:logs/test_runs/2026-10-29_145433_telemetry.csv(5 条, 间隔 1.000 s)
+- P2 汇总:analysis/summary.csv、analysis/phase_summary.csv
+- P2 条件对比:analysis/suite_summary.csv、analysis/suite_condition_summary.csv
+- P2 图表:analysis/figures/phase_comparison.png、analysis/figures/condition_comparison.png
 - 测试套件:scripts/run_test_suite.py、docs/test_cases.csv、logs/test_runs/2026-10-25_172913_suite.csv
 - 测试套件复跑:logs/test_runs/2026-10-25_183238_suite.csv(5/7)、2026-10-25_183459_suite.csv(7/7)
 - 三轮复跑:logs/test_runs/2026-10-25_192618_suite.csv、192709、192800
@@ -93,7 +98,7 @@
 
 ## 7. 下次的唯一任务
 
-P2:在数据分析脚本中补 95 百分位统计,并生成不同实验条件的关键指标对比图。
+P3:给测试套件补日志完整性用例,并把异常级别区分为 ERROR 与 WARN。
 
 ## 8. 我要问 ChatGPT 的问题(攒着一起问)
 

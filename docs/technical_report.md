@@ -79,9 +79,15 @@
 
 ### 4.4 数据分析
 
-`analysis/analyze_logs.py` 汇总 4 份遥测、199 条样本，生成 `analysis/summary.csv`、
-`analysis/suite_summary.csv` 与两张图（`figures/altitude_curve.png`、`figures/flight_kinematics.png`）。
-其中发现一份旧数据存在 68 s 采样空档（known_issues 1.14），已在统计中排除。
+`analysis/analyze_logs.py` 对遥测计算最大值和 P95，生成 `analysis/summary.csv`、
+`analysis/phase_summary.csv` 和 `figures/phase_comparison.png`；对测试套件按失败特征分组，
+生成 `analysis/suite_condition_summary.csv` 和 `figures/condition_comparison.png`。
+当前有效遥测为 5 份、264 条样本；采样最大间隔超过 5 s 的旧数据会被跳过并打印原因，
+其中一份旧数据存在 68.42 s 空档（known_issues 1.14）。
+
+P95 表示排序后第 95 百分位：保留接近尾部的风险水平，同时避免单个极端值完全主导结论。
+阶段统计显示，空中悬停的 P95 水平漂移为 0.067 m；测试条件对比中，正常完整套件为
+42/42 PASS，悬停窗口异常为 18/21，状态污染为 5/7。
 
 ## 5. 问题排查案例：高度口径（AMSL vs AGL）
 

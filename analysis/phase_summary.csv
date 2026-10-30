@@ -1,0 +1,5 @@
+phase,files,samples,alt_p95_m,drift_p95_m,vz_abs_p95_mps
+ground_hold,5,183,0.044,0.053,0.014
+airborne_hold,2,57,2.512,0.067,0.138
+takeoff,2,13,1.582,0.05,0.739
+landing,1,8,2.246,0.028,0.682
